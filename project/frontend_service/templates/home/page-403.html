@@ -1,0 +1,24 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Access Denied {% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card my-4">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-danger shadow-danger border-radius-lg pt-4 pb-3">
+                        <h6 class="text-white text-capitalize ps-3">403 - Access Denied</h6>
+                    </div>
+                </div>
+                <div class="card-body px-4 pb-4">
+                    <h4>You don't have permission to access this page</h4>
+                    <p>Please contact your administrator if you believe this is an error.</p>
+                    <a href="{{ url_for('home_blueprint.index') }}" class="btn btn-primary">Return to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

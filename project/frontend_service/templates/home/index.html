@@ -1,0 +1,702 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+
+    <style>
+     .camera-grid-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.95);
+        z-index: 9999;
+        overflow-y: auto;
+        padding: 20px;
+    }
+    .camera-thumbnails {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        height: calc(100vh - 40px);
+        overflow-y: auto;
+    }
+    .camera-thumbnail {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .camera-thumbnail:hover {
+        transform: scale(1.05);
+    }
+    .full-view-camera {
+        height: calc(100vh - 100px);
+        overflow-y: auto;
+    }
+
+    </style>
+
+{% endblock stylesheets %}
+
+{% block content %}
+
+    <div class="container-fluid py-4">
+      <div class="row">
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card">
+            <div class="card-header p-3 pt-2">
+              <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                <i class="material-icons opacity-10">people</i>
+              </div>
+              <div class="text-end pt-1">
+                <p class="text-sm mb-0 text-capitalize">Today's Student Count </p>
+                <h4 class="mb-0">238</h4>
+              </div>
+            </div>
+            <hr class="dark horizontal my-0">
+            <div class="card-footer p-3">
+              <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+15% </span>than lask week</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card">
+            <div class="card-header p-3 pt-2">
+              <div class="icon icon-lg icon-shape bg-gradient-primary shadow-primary text-center border-radius-xl mt-n4 position-absolute">
+                <i class="material-icons opacity-10">error_outline</i>
+              </div>
+              <div class="text-end pt-1">
+                <p class="text-sm mb-0 text-capitalize">Incidents Detected</p>
+                <h4 class="mb-0">4</h4>
+              </div>
+            </div>
+            <hr class="dark horizontal my-0">
+            <div class="card-footer p-3">
+              <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+3% </span>than last week</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card">
+            <div class="card-header p-3 pt-2">
+              <div class="icon icon-lg icon-shape bg-gradient-success shadow-success text-center border-radius-xl mt-n4 position-absolute">
+                <i class="material-icons opacity-10">videocam</i>
+              </div>
+              <div class="text-end pt-1">
+                <p class="text-sm mb-0 text-capitalize">Total Offline Cameras</p>
+                <h4 class="mb-0">2</h4>
+              </div>
+            </div>
+            <hr class="dark horizontal my-0">
+            <div class="card-footer p-3">
+              <p class="mb-0"><span class="text-danger text-sm font-weight-bolder">-2%</span> than yesterday</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-sm-6">
+          <div class="card">
+            <div class="card-header p-3 pt-2">
+              <div class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
+                <i class="material-icons opacity-10">lock_open</i>
+              </div>
+              <div class="text-end pt-1">
+                <p class="text-sm mb-0 text-capitalize">Total Unsecure Exits</p>
+                <h4 class="mb-0">2</h4>
+              </div>
+            </div>
+            <hr class="dark horizontal my-0">
+            <div class="card-footer p-3">
+              <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+5% </span>than yesterday</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+   <div class="row mt-4">
+    <!-- Camera Section (Left Side) -->
+    <div class="col-lg-6 col-md-6 mt-4 mb-4">
+        <div class="card z-index-2">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+                    <div class="camera-feed">
+                        <!-- Camera display in the middle -->
+                        <div class="d-flex justify-content-center align-items-center" style="height: 400px;">
+                          <img id="mainCameraFeed" src="/video_feed/cam1" alt="Main Camera Feed with Detection" class="img-fluid border-radius-lg" style="height: 400px; width: auto; object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- Navigation controls with Camera Feed text centered -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <button class="btn btn-sm btn-outline-secondary">
+                        <i class="material-icons" style="font-size: 36px;">chevron_left</i>
+                    </button>
+
+                    <div class="text-center">
+                        <h6 class="mb-0">Library - Entrance Camera</h6>
+                    </div>
+
+                    <button class="btn btn-sm btn-outline-secondary">
+                        <i class="material-icons" style="font-size: 36px;">chevron_right</i>
+                    </button>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <button id="viewAllCameras" class="btn btn-sm btn-primary">
+                        <i class="material-icons me-2" style="font-size: 24px;">grid_view</i>
+                            View All Library Cameras
+                    </button>
+                </div>
+
+                <p class="mb-0 text-sm text-center mt-3">updated 4 min ago</p>
+            </div>
+        </div>
+    </div>
+    <!-- Building Layout Section (Right Side) -->
+    <div class="col-lg-6 col-md-6 mt-4 mb-4">
+        <div class="card z-index-2">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+                <div class="bg-gradient-success shadow-success border-radius-lg py-3 pe-1">
+                    <div class="building-layout">
+                        <div class="d-flex justify-content-center">
+                            <img src="/static/assets/img/BuildingImage.png" alt="Building Layout" class="img-fluid border-radius-lg" style="height: 515px; overflow-y: auto;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <h6 class="mb-0">Building Layout</h6>
+
+                    <p class="mb-0 text-sm">updated 4 min ago</p>
+                </div>
+            </div>
+        </div>
+       <!-- Camera Grid Overlay -->
+    <div id="cameraGridOverlay" class="camera-grid-overlay" style="display: none;">
+    <div class="container-fluid p-4">
+        <div class="row">
+            <div class="col-md-3">
+                <!-- Thumbnail view -->
+                <div class="camera-thumbnails">
+                    <!-- 9 thumbnail items -->
+                    {% for i in range(1, 4) %}
+                    <div class="camera-thumbnail mb-1">
+                        <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 pe-1">
+                            <div class="d-flex justify-content-center align-items-center" style="height: 100px;">
+                                <!-- <h6 class="text-white fw-bold">CAMERA {{ i }}</h6> -->
+                                <img src="/video_feed/cam{{i}}" alt="Camera cam{{i}}" class="img-fluid border-radius-lg" style="height: 100%; width: 100%; object-fit: cover;">
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-9">
+                <!-- Full view camera -->
+                <div class="text-end">
+                  <button id="closeGridView" class="btn btn-danger mt-3">Close</button>
+                </div>
+
+                <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+                    <div class="camera-feed">
+                        <!-- Camera display in the middle -->
+                        <div class="d-flex justify-content-center align-items-center" style="height: 600px;">
+                          <img id="fullViewCameraFeed" src="/video_feed/cam1" alt="Full View Camera" class="img-fluid border-radius-lg" style="height: 100%; width: auto; object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation controls -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <button id="prevCamera" class="btn btn-sm btn-outline-secondary">
+                        <i class="material-icons" style="font-size: 24px;">chevron_left</i>
+                    </button>
+                    <h6 id="currentCameraLabel" class="mb-0">Camera 1</h6>
+                    <button id="nextCamera" class="btn btn-sm btn-outline-secondary">
+                        <i class="material-icons" style="font-size: 24px;">chevron_right</i>
+                    </button>
+                </div>
+                <p class="text-sm text-center mt-2">Last updated: 4 min ago</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    </div>
+    <div class="row mt-4">
+    <div class="col-lg-6 col-md-6 mt-4 mb-4">
+      <div class="card z-index-2">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+              <div class="bg-gradient-success shadow-success border-radius-lg py-3 pe-1">
+                  <div class="crowd-analytics-layout">
+                      <div class="d-flex justify-content-center">
+                        <div id="density-heatmap" style="height: 400px; width: 100%;" class="border-radius-lg"></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="card-body">
+              <h6 class="mb-0">People Density</h6>
+                  <p class="mb-0 text-sm">updated 4 min ago</p>
+                  <p class="mb-0 text-sm">Total people counted: 65</p>
+              </div>
+          </div>
+      </div>
+    <div class="col-lg-6 col-md-6 mt-4 mb-4">
+      <div class="card z-index-2">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+              <div class="bg-gradient-success shadow-success border-radius-lg py-3 pe-1">
+                  <div class="building-layout">
+                      <div class="d-flex justify-content-center">
+                        <div id="flow-vector-field2" style="height: 400px; width: 100%;" class="border-radius-lg"></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="card-body">
+              <h6 class="mb-0">People Flow</h6>
+                  <p class="mb-0 text-sm">updated 4 min ago</p>
+              </div>
+          </div>
+      </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+{ // Heatmap
+    const x = Array.from({ length: 20 }, (_, i) => i * 0.5);
+    const y = Array.from({ length: 15 }, (_, j) => j * 0.5);
+    const z = y.map((_, j) => x.map(xi => Math.exp(-((xi-5)**2 + (j*0.5-4)**2)/4)));
+    
+    Plotly.newPlot('density-heatmap', [{
+        type: 'heatmap',
+        x, y, z,
+        colorscale: 'Viridis'
+    }], {
+        title: 'Density Heatmap',
+        margin: { l: 40, r: 40, t: 60, b: 40 }
+    });
+}
+</script>
+
+<script>
+{ // Vector Field
+    const pointsX = Array.from({ length: 5 }, (_, i) => i * 2);
+    const pointsY = Array.from({ length: 4 }, (_, j) => j * 2);
+    const traces = [];
+    
+    pointsX.forEach((xi, i) => {
+        pointsY.forEach((yj, j) => {
+            traces.push({
+                type: 'scatter',
+                mode: 'lines+markers',
+                x: [xi, xi + Math.sin(Math.PI * xi/10)],
+                y: [yj, yj + Math.cos(Math.PI * yj/8)],
+                line: { color: '#FF6D00', width: 2 }
+            });
+        });
+    });
+
+    Plotly.newPlot('flow-vector-field', traces, {
+        title: 'People Flow',
+        margin: { l: 40, r: 40, t: 60, b: 40 }
+    });
+}
+</script>
+
+<script>
+  {
+      // Define the grid
+      const gridSize = 5;
+      const x = Array.from({length: gridSize}, (_, i) => i);
+      const y = Array.from({length: gridSize}, (_, i) => i);
+  
+      // Define flow directions
+      const directions = ['N', 'S', 'E', 'W', 'NE', 'NW', 'SE', 'SW'];
+      const directionVectors = {
+          'N': [0, 1], 'S': [0, -1], 'E': [1, 0], 'W': [-1, 0],
+          'NE': [0.707, 0.707], 'NW': [-0.707, 0.707],
+          'SE': [0.707, -0.707], 'SW': [-0.707, -0.707]
+      };
+  
+      // Generate random flow data
+      const flowData = x.flatMap(xi => y.map(yi => ({
+          x: xi,
+          y: yi,
+          direction: directions[Math.floor(Math.random() * directions.length)]
+      })));
+  
+      // Create traces for the vector field
+      const traces = flowData.map(point => {
+          const [dx, dy] = directionVectors[point.direction];
+          return {
+              type: 'scatter',
+              mode: 'lines+markers',
+              x: [point.x, point.x + dx],
+              y: [point.y, point.y + dy],
+              line: { color: '#FF6D00', width: 2 },
+              marker: {
+                  symbol: 'arrow',
+                  size: 10,
+                  angle: Math.atan2(dy, dx) * (180 / Math.PI),
+                  angleref: 'previous',
+                  color: '#FF6D00'
+              },
+              hoverinfo: 'text',
+              text: `Position: (${point.x}, ${point.y})<br>Direction: ${point.direction}`
+          };
+      });
+  
+      // Layout configuration
+      const layout = {
+          title: 'People Flow Direction (Cardinal)',
+          xaxis: {
+              title: 'West ← → East',
+              range: [-1, gridSize],
+              tickvals: x,
+              ticktext: x.map(val => val === 0 ? 'W' : val === gridSize - 1 ? 'E' : val.toString())
+          },
+          yaxis: {
+              title: 'South ← → North',
+              range: [-1, gridSize],
+              tickvals: y,
+              ticktext: y.map(val => val === 0 ? 'S' : val === gridSize - 1 ? 'N' : val.toString())
+          },
+          showlegend: false,
+          hovermode: 'closest',
+          margin: { l: 50, r: 50, t: 50, b: 50 },
+          paper_bgcolor: 'rgba(0,0,0,0)',
+          plot_bgcolor: 'rgba(0,0,0,0)'
+      };
+  
+      // Create the plot
+      Plotly.newPlot('flow-vector-field2', traces, layout);
+  }
+  </script>
+
+  
+  <script>
+    var ctx = document.getElementById("chart-bars").getContext("2d");
+
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: ["M", "T", "W", "T", "F", "S", "S"],
+        datasets: [{
+          label: "Sales",
+          tension: 0.4,
+          borderWidth: 0,
+          borderRadius: 4,
+          borderSkipped: false,
+          backgroundColor: "rgba(255, 255, 255, .8)",
+          data: [50, 20, 10, 22, 50, 10, 40],
+          maxBarThickness: 6
+        }, ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          }
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index',
+        },
+        scales: {
+          y: {
+            grid: {
+              drawBorder: false,
+              display: true,
+              drawOnChartArea: true,
+              drawTicks: false,
+              borderDash: [5, 5],
+              color: 'rgba(255, 255, 255, .2)'
+            },
+            ticks: {
+              suggestedMin: 0,
+              suggestedMax: 500,
+              beginAtZero: true,
+              padding: 10,
+              font: {
+                size: 14,
+                weight: 300,
+                family: "Roboto",
+                style: 'normal',
+                lineHeight: 2
+              },
+              color: "#fff"
+            },
+          },
+          x: {
+            grid: {
+              drawBorder: false,
+              display: true,
+              drawOnChartArea: true,
+              drawTicks: false,
+              borderDash: [5, 5],
+              color: 'rgba(255, 255, 255, .2)'
+            },
+            ticks: {
+              display: true,
+              color: '#f8f9fa',
+              padding: 10,
+              font: {
+                size: 14,
+                weight: 300,
+                family: "Roboto",
+                style: 'normal',
+                lineHeight: 2
+              },
+            }
+          },
+        },
+      },
+    });
+
+
+    var ctx2 = document.getElementById("chart-line").getContext("2d");
+
+    new Chart(ctx2, {
+      type: "line",
+      data: {
+        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        datasets: [{
+          label: "Mobile apps",
+          tension: 0,
+          borderWidth: 0,
+          pointRadius: 5,
+          pointBackgroundColor: "rgba(255, 255, 255, .8)",
+          pointBorderColor: "transparent",
+          borderColor: "rgba(255, 255, 255, .8)",
+          borderColor: "rgba(255, 255, 255, .8)",
+          borderWidth: 4,
+          backgroundColor: "transparent",
+          fill: true,
+          data: [50, 40, 300, 320, 500, 350, 200, 230, 500],
+          maxBarThickness: 6
+
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          }
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index',
+        },
+        scales: {
+          y: {
+            grid: {
+              drawBorder: false,
+              display: true,
+              drawOnChartArea: true,
+              drawTicks: false,
+              borderDash: [5, 5],
+              color: 'rgba(255, 255, 255, .2)'
+            },
+            ticks: {
+              display: true,
+              color: '#f8f9fa',
+              padding: 10,
+              font: {
+                size: 14,
+                weight: 300,
+                family: "Roboto",
+                style: 'normal',
+                lineHeight: 2
+              },
+            }
+          },
+          x: {
+            grid: {
+              drawBorder: false,
+              display: false,
+              drawOnChartArea: false,
+              drawTicks: false,
+              borderDash: [5, 5]
+            },
+            ticks: {
+              display: true,
+              color: '#f8f9fa',
+              padding: 10,
+              font: {
+                size: 14,
+                weight: 300,
+                family: "Roboto",
+                style: 'normal',
+                lineHeight: 2
+              },
+            }
+          },
+        },
+      },
+    });
+
+    var ctx3 = document.getElementById("chart-line-tasks").getContext("2d");
+
+    new Chart(ctx3, {
+      type: "line",
+      data: {
+        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        datasets: [{
+          label: "Mobile apps",
+          tension: 0,
+          borderWidth: 0,
+          pointRadius: 5,
+          pointBackgroundColor: "rgba(255, 255, 255, .8)",
+          pointBorderColor: "transparent",
+          borderColor: "rgba(255, 255, 255, .8)",
+          borderWidth: 4,
+          backgroundColor: "transparent",
+          fill: true,
+          data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+          maxBarThickness: 6
+
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          }
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index',
+        },
+        scales: {
+          y: {
+            grid: {
+              drawBorder: false,
+              display: true,
+              drawOnChartArea: true,
+              drawTicks: false,
+              borderDash: [5, 5],
+              color: 'rgba(255, 255, 255, .2)'
+            },
+            ticks: {
+              display: true,
+              padding: 10,
+              color: '#f8f9fa',
+              font: {
+                size: 14,
+                weight: 300,
+                family: "Roboto",
+                style: 'normal',
+                lineHeight: 2
+              },
+            }
+          },
+          x: {
+            grid: {
+              drawBorder: false,
+              display: false,
+              drawOnChartArea: false,
+              drawTicks: false,
+              borderDash: [5, 5]
+            },
+            ticks: {
+              display: true,
+              color: '#f8f9fa',
+              padding: 10,
+              font: {
+                size: 14,
+                weight: 300,
+                family: "Roboto",
+                style: 'normal',
+                lineHeight: 2
+              },
+            }
+          },
+        },
+      },
+    });
+
+  </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const viewAllBtn = document.getElementById('viewAllCameras');
+        const closeGridBtn = document.getElementById('closeGridView');
+        const gridOverlay = document.getElementById('cameraGridOverlay');
+        viewAllBtn.addEventListener('click', () => {
+            console.log('View All Cameras button clicked');
+            gridOverlay.style.display = 'block';
+        });
+
+        closeGridBtn.addEventListener('click', () => {
+            console.log('Close Grid View button clicked');
+            gridOverlay.style.display = 'none';
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('click', function(event) {
+      logClickEvent(event);
+    }, true);
+
+    function logClickEvent(event) {
+      const eventData = {
+        timestamp: new Date().toISOString(),
+        elementType: event.target.tagName,
+        elementId: event.target.id || 'N/A',
+        elementClass: event.target.className || 'N/A',
+        pageX: event.pageX,
+        pageY: event.pageY
+      };
+
+      sendToServer(eventData);
+    }
+
+    function sendToServer(data) {
+      fetch('/api/log-event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.text();
+      })
+      .then(text => {
+        try {
+          const result = JSON.parse(text);
+          console.log('Event logged:', result);
+        } catch (e) {
+          console.error('Server response was not JSON:', text);
+        }
+      })
+      .catch(error => console.error('Error logging event:', error));
+    }
+
+
+
+
+</script>
+
+{% endblock javascripts %}

@@ -1,0 +1,114 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Dashboard {% endblock %}
+
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <div class="container-fluid py-4">
+      <div class="row">
+        </div>
+
+      <div class="row mt-4">
+        <div class="col-lg-6 col-md-6 mt-4 mb-4">
+          <div id="camera1" class="card z-index-2">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+              <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+                <div class="camera-feed">
+                  <div class="d-flex justify-content-center">
+                    <img src="/video_feed/cam1" alt="Camera 1" class="img-fluid border-radius-lg"  style="height: 400px; overflow-y: auto;" > </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <h6 class="mb-0 ">Camera 1 Feed</h6>
+              <p class="text-sm ">Floor 1 - Main Entrance</p>
+              <hr class="dark horizontal">
+              <div class="d-flex ">
+                <i class="material-icons text-sm my-auto me-1">camera_alt</i>
+                <p class="mb-0 text-sm">Camera 1</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6 mt-4 mb-4">
+          <div id="camera2" class="card z-index-2">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+              <div class="bg-gradient-success shadow-success border-radius-lg py-3 pe-1">
+                <div class="camera-feed">
+                  <div class="d-flex justify-content-center">
+                    <img src="/video_feed/cam2" alt="Camera 2" class="img-fluid border-radius-lg" style="height: 400px; overflow-y: auto;" >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <h6 class="mb-0 ">Camera 2 Feed</h6>
+              <p class="text-sm ">Floor 2 - Cafeteria</p>
+              <hr class="dark horizontal">
+              <div class="d-flex ">
+                <i class="material-icons text-sm my-auto me-1">camera_alt</i>
+                <p class="mb-0 text-sm">Camera 2</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6 mt-4 mb-4">
+            <div id="camera3" class="card z-index-2">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+              <div class="bg-gradient-warning shadow-warning border-radius-lg py-3 pe-1">
+                <div class="camera-feed">
+                  <div class="d-flex justify-content-center">
+                    <img src="/video_feed/cam3" alt="Camera 3" class="img-fluid border-radius-lg"  style="height: 400px; overflow-y: auto;" >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <h6 class="mb-0 ">Camera 3 Feed</h6>
+              <p class="text-sm ">Floor 3 - Library</p>
+              <hr class="dark horizontal">
+              <div class="d-flex ">
+                <i class="material-icons text-sm my-auto me-1">camera_alt</i>
+                <p class="mb-0 text-sm">Camera 3</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- <div class="col-lg-6 col-md-6 mt-4 mb-4">
+            <div id="camera4" class="card z-index-2">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+              <div class="bg-gradient-info shadow-info border-radius-lg py-3 pe-1">
+                <div class="camera-feed">
+                  <div class="d-flex justify-content-center">
+                    <img src="/static/assets/img/camera4.png" alt="Camera 4" class="img-fluid border-radius-lg" style="height: 400px; overflow-y: auto;" >
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <h6 class="mb-0 ">Camera 4 Feed</h6>
+              <p class="text-sm ">Floor 1 - Hallway</p>
+              <hr class="dark horizontal">
+              <div class="d-flex ">
+                <i class="material-icons text-sm my-auto me-1">camera_alt</i>
+                <p class="mb-0 text-sm">Camera 4</p>
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+
+
+      </div>
+      </div>
+
+{% endblock content %}
+
+{% block javascripts %}
+  {% endblock javascripts %}

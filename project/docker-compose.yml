@@ -1,0 +1,115 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  api-gateway:
+    build: ./api_gateway
+    ports:
+      - "8000:8000"
+    depends_on:
+      - auth
+      - weapon
+      - crowd
+      - speech
+    environment:
+      - AUTH_SERVICE_URL=http://auth:5000
+      - WEAPON_SERVICE_URL=http://weapon:5001
+      - CROWD_SERVICE_URL=http://crowd:5002
+      - SPEECH_SERVICE_URL=http://speech:5003
+
+  auth:
+    build: ./auth_service
+    ports:
+      - "5000:5000"
+    environment:
+      - SECRET_KEY=your-secret-key
+      - DATABASE_URI=sqlite:///users.db
+    volumes:
+      - auth-data:/app/instance
+
+  weapon:
+    build: ./weapon_service
+    ports:
+      - "5001:5001"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - WEAPON_MODEL_PATH=models/best_yolo11x_gun.engine
+      - OUTPUT_DIR=detections
+      - CAMERA1_URL=rtsp://192.168.1.121:554/stream0
+      - CAMERA2_URL=rtsp://192.168.1.30:554/stream0
+      - CAMERA3_URL=rtsp://192.168.1.27:554/stream0
+    volumes:
+      - ./detections:/app/detections
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  crowd:
+    build: ./crowd_service
+    ports:
+      - "5002:5002"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - CROWD_MODEL_PATH=models/best_yolo11s_crowd.engine
+      - BYTETRACK_PATH=/app/ByteTrack
+      - CAMERA1_URL=rtsp://192.168.1.121:554/stream0
+      - CAMERA2_URL=rtsp://192.168.1.30:554/stream0
+      - CAMERA3_URL=rtsp://192.168.1.27:554/stream0
+    volumes:
+      - ./ByteTrack:/app/ByteTrack
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  speech:
+    build: ./speech_service
+    ports:
+      - "5003:5003"
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+  frontend:
+    build: ./frontend_service
+    ports:
+      - "80:5000"
+    depends_on:
+      - api-gateway
+      - auth
+      - weapon
+      - crowd
+      - speech
+    environment:
+      - AUTH_SERVICE_URL=http://auth:5000
+      - WEAPON_SERVICE_URL=http://weapon:5001
+      - CROWD_SERVICE_URL=http://crowd:5002
+      - SPEECH_SERVICE_URL=http://speech:5003
+      - SECRET_KEY=your-secret-key
+    volumes:
+      - ./static:/app/static
+
+volumes:
+  redis-data:
+  auth-data:

@@ -1,0 +1,315 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Crowd Analytics & Monitoring {% endblock %}
+
+{% block stylesheets %}
+<!-- Add any custom styles if needed -->
+<style>
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .table thead {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    .table th {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .table td {
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .input-search {
+        width: 100%;
+        padding: 5px;
+        margin-bottom: 10px;
+    }
+
+    .input-search:focus {
+        border-color: #007bff;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .card-header {
+        background-color: #007bff;
+        color: white;
+        padding: 15px;
+    }
+
+    .card-footer {
+        background-color: #f9f9f9;
+    }
+
+    .camera-link {
+        color: blue;
+        text-decoration: underline;
+        position: relative;
+    }
+
+    .camera-link:hover::after {
+        content: "Click to view camera feed";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #333;
+        color: white;
+        padding: 5px;
+        border-radius: 3px;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card my-4">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                        <h6 class="text-white text-capitalize ps-3">Crowd Analytics & Monitoring</h6>
+                    </div>
+                </div>
+                <div class="card-body px-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0" id="analyticsTable">
+                            <thead>
+                                <tr>
+                                    <th><input type="text" class="form-control input-search" placeholder="Search Timestamp" onkeyup="filterTable(0)"></th>
+                                    <th><input type="text" class="form-control input-search" placeholder="Search Camera Info" onkeyup="filterTable(1)"></th>
+                                    <th><input type="text" class="form-control input-search" placeholder="Search Flow" onkeyup="filterTable(2)"></th>
+                                    <th><input type="text" class="form-control input-search" placeholder="Search Reason" onkeyup="filterTable(3)"></th>
+                                    <th><input type="text" class="form-control input-search" placeholder="Search Density" onkeyup="filterTable(4)"></th>
+                                    <th><input type="text" class="form-control input-search" placeholder="Search Confidence Level" onkeyup="filterTable(5)"></th>
+                                    <th><input type="text" class="form-control input-search" placeholder="Search Dwell Time" onkeyup="filterTable(6)"></th>
+                                    <th><input type="text" class="form-control input-search" placeholder="Search People Count" onkeyup="filterTable(7)"></th>
+                                    <th><input type="text" class="form-control input-search" placeholder="Search Crowd Entry Info" onkeyup="filterTable(8)"></th>
+                                </tr>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Camera Info</th>
+                                    <th>Flow</th>
+                                    <th>Reason</th>
+                                    <th>Density People/sqft</th>
+                                    <th>Confidence Level</th>
+                                    <th>Dwell Time</th>
+                                    <th>Number of People</th>
+                                    <th>Crowd Entry Info</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- <tr>
+                                    <td>23/04/18, 10:24:10</td>
+                                    <td><a href="/cameras.html#camera1" class="camera-link">Camera 1</a></td>
+                                    <td>"Normal"</td>
+                                    <td>"N/A"</td>
+                                    <td class="text-center">0.2</td>
+                                    <td class="text-center">High</td>
+                                    <td class="text-center">3 minutes</td>
+                                    <td class="text-center">150</td>
+                                    <td class="text-center">120</td>
+                                </tr>
+                                <tr>
+                                    <td>23/04/18, 10:24:10</td>
+                                    <td><a href="/cameras.html#camera2" class="camera-link">Camera 2</a></td>
+                                    <td>Abnormal</td>
+                                    <td>Crowd is running</td>
+                                    <td class="text-center">0.5</td>
+                                    <td class="text-center">High</td>
+                                    <td class="text-center">1 minute</td>
+                                    <td class="text-center">200</td>
+                                    <td class="text-center">130</td>
+                                </tr>
+                                <tr>
+                                    <td>23/04/18, 10:24:10</td>
+                                    <td><a href="/cameras.html#camera3" class="camera-link">Camera 3</a></td>
+                                    <td>Abnormal</td>
+                                    <td>Carrying a Gun</td>
+                                    <td class="text-center">0.6</td>
+                                    <td class="text-center">High</td>
+                                    <td class="text-center">1 minute</td>
+                                    <td class="text-center">80</td>
+                                    <td class="text-center">50</td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function filterTable(columnIndex) {
+    let table, tr, i, j, td, txtValue;
+    table = document.getElementById("analyticsTable");
+    tr = table.getElementsByTagName("tr");
+
+    let inputs = document.querySelectorAll("thead input");
+
+    for (i = 2; i < tr.length; i++) {
+        let match = true;
+
+        for (j = 0; j < inputs.length; j++) {
+            let filter = inputs[j].value.toLowerCase();
+            td = tr[i].getElementsByTagName("td")[j];
+
+            if (td && filter) {
+                txtValue = td.textContent || td.innerText;
+                if (!txtValue.toLowerCase().includes(filter)) {
+                    match = false;
+                    break;
+                }
+            }
+        }
+        tr[i].style.display = match ? "" : "none";
+    }
+}
+
+// document.addEventListener("DOMContentLoaded", function(){
+//   fetch('/json/tracking')
+//     .then(response => response.json())
+//     .then(data => {
+//       // data is an object where each key is a track ID with its details
+//       const tableBody = document.querySelector("#analyticsTable tbody");
+//       tableBody.innerHTML = "";
+//       // Iterate over each track in the tracking data
+//       for (const trackId in data) {
+//         const track = data[trackId];
+//         // Convert the start time (assumed to be a UNIX timestamp in seconds) to a human-readable string.
+//         const timestamp = new Date(track.start_time * 1000).toLocaleString();
+//         // Map camera IDs to a link (if needed)
+//         let cameraInfo = "";
+//         if (track.camera === "cam1") {
+//           cameraInfo = `<a href="/cameras.html#camera1" class="camera-link">Camera 1</a>`;
+//         } else if (track.camera === "cam2") {
+//           cameraInfo = `<a href="/cameras.html#camera2" class="camera-link">Camera 2</a>`;
+//         } else if (track.camera === "cam3") {
+//           cameraInfo = `<a href="/cameras.html#camera3" class="camera-link">Camera 3</a>`;
+//         }
+//         const flow = track.movement_direction || "N/A";
+//         const reason = track.anomaly || "N/A";
+//         // Density is not provided by the analytics module – you can calculate or hardcode if available
+//         const density = "N/A";
+//         const confidence = "High"; // or use a dynamic value if available
+//         const dwellTime = (track.dwell_time / 60).toFixed(2) + " minutes";
+//         // For number of people and crowd entry info, you may want to integrate camera_stats separately.
+//         // For now, we set them to "N/A" or dummy values.
+//         const numberOfPeople = "N/A";
+//         const crowdEntryInfo = "N/A";
+//         const row = document.createElement("tr");
+//         row.innerHTML = `
+//           <td>${timestamp}</td>
+//           <td>${cameraInfo}</td>
+//           <td>${flow}</td>
+//           <td>${reason}</td>
+//           <td>${density}</td>
+//           <td>${confidence}</td>
+//           <td>${dwellTime}</td>
+//           <td>${numberOfPeople}</td>
+//           <td>${crowdEntryInfo}</td>
+//         `;
+//         tableBody.appendChild(row);
+//       }
+//     })
+//     .catch(error => {
+//       console.error("Error fetching tracking data:", error);
+//     });
+// });
+
+document.addEventListener("DOMContentLoaded", function(){
+  function updateTable() {
+    // Fetch both tracking data and camera stats
+    Promise.all([
+      fetch('/json/tracking').then(response => response.json()),
+      fetch('/json/camera_stats').then(response => response.json())
+    ])
+    .then(([trackingData, cameraStats]) => {
+      const tableBody = document.querySelector("#analyticsTable tbody");
+      tableBody.innerHTML = "";
+      
+      // Iterate over each track in the tracking data
+      for (const trackId in trackingData) {
+        const track = trackingData[trackId];
+        const timestamp = new Date(track.start_time * 1000).toLocaleString();
+        
+        // Map camera IDs to a link
+        let cameraInfo = "";
+        let cameraPeopleCount = 0;
+        let cameraEntryInfo = "";
+        
+        if (track.camera === "cam1") {
+          cameraInfo = `<a href="/cameras.html#camera1" class="camera-link">Camera 1</a>`;
+          cameraPeopleCount = cameraStats.cam1.people_count;
+          cameraEntryInfo = `Entries: ${cameraStats.cam1.entries}, Exits: ${cameraStats.cam1.exits}`;
+        } else if (track.camera === "cam2") {
+          cameraInfo = `<a href="/cameras.html#camera2" class="camera-link">Camera 2</a>`;
+          cameraPeopleCount = cameraStats.cam2.people_count;
+          cameraEntryInfo = `Entries: ${cameraStats.cam2.entries}, Exits: ${cameraStats.cam2.exits}`;
+        } else if (track.camera === "cam3") {
+          cameraInfo = `<a href="/cameras.html#camera3" class="camera-link">Camera 3</a>`;
+          cameraPeopleCount = cameraStats.cam3.people_count;
+          cameraEntryInfo = `Entries: ${cameraStats.cam3.entries}, Exits: ${cameraStats.cam3.exits}`;
+        }
+        
+        const flow = track.movement_direction || "N/A";
+        const reason = track.anomaly || "N/A";
+        const density = (cameraPeopleCount / 100).toFixed(2); // Simple approximation
+        const confidence = "High";
+        const dwellTime = (track.dwell_time / 60).toFixed(2) + " minutes";
+        
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${timestamp}</td>
+          <td>${cameraInfo}</td>
+          <td>${flow}</td>
+          <td>${reason}</td>
+          <td>${density}</td>
+          <td>${confidence}</td>
+          <td>${dwellTime}</td>
+          <td>${cameraPeopleCount}</td>
+          <td>${cameraEntryInfo}</td>
+        `;
+        tableBody.appendChild(row);
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching data:", error);
+    });
+  }
+  
+  // Initial update
+  updateTable();
+  
+  // Update every 2 seconds
+  setInterval(updateTable, 2000);
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    let inputs = document.querySelectorAll("thead input");
+    inputs.forEach(input => {
+        input.addEventListener("keyup", filterTable);
+    });
+});
+</script>
+{% endblock content %}
+
+{% block javascripts %}
+{% endblock javascripts %}

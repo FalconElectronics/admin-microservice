@@ -1,0 +1,156 @@
+
+{% extends "layouts/base.html" %}
+
+{% block title %} Admin Panel {% endblock %}
+
+{% block stylesheets %}
+<style>
+    .nav-tabs .nav-link {
+        color: #007bff;
+        font-weight: bold;
+        border: 1px solid #007bff;
+        border-radius: 5px;
+        margin-right: 5px;
+    }
+
+    .nav-tabs .nav-link.active {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .tab-content {
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <h3 class="mb-4">Admin Panel</h3>
+
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="user-management-tab" data-bs-toggle="tab" href="#user-management" role="tab" aria-controls="user-management" aria-selected="true">User Management</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="system-configuration-tab" data-bs-toggle="tab" href="#system-configuration" role="tab" aria-controls="system-configuration" aria-selected="false">System Configuration</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="log-management-tab" data-bs-toggle="tab" href="#log-management" role="tab" aria-controls="log-management" aria-selected="false">Log Management</a>
+        </li>
+    </ul>
+
+    <!-- Tabs Content -->
+    <div class="tab-content" id="adminTabsContent">
+        <!-- User Management Tab -->
+        <div class="tab-pane fade show active" id="user-management" role="tabpanel" aria-labelledby="user-management-tab">
+            <h5>User Management</h5>
+            <p>Manage users, roles, and permissions.</p>
+        </div>
+
+        <!-- System Configuration Tab -->
+        <div class="tab-pane fade" id="system-configuration" role="tabpanel" aria-labelledby="system-configuration-tab">
+            <h5>System Configuration</h5>
+            <p>Configure system settings and parameters.</p>
+        </div>
+
+        <!-- Log Management Tab -->
+        <div class="tab-pane fade" id="log-management" role="tabpanel" aria-labelledby="log-management-tab">
+            <h5>Log Management</h5>
+            <div class="card my-4">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                        <h6 class="text-white text-capitalize ps-3">Log Management</h6>
+                    </div>
+                </div>
+                <div class="card-body px-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0" id="logTable">
+                            <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Timestamp</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Sequence</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Message</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Service Name</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Machine Name</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">IP Address</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">User</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Performance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in logs %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex px-2 py-1">
+                                            <div class="d-flex flex-column justify-content-center">
+                                                <h6 class="mb-0 text-sm">{{ log.timestamp if log else '' }}</h6>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <p class="text-xs font-weight-bold mb-0">{{ log.sequence if log else '' }}</p>
+                                    </td>
+                                    <td class="align-middle text-center text-sm">
+                                        <span class="text-secondary text-xs font-weight-bold">{{ log.message if log else '' }}</span>
+                                    </td>
+                                    <td class="align-middle text-center text-sm">
+                                        <span class="text-secondary text-xs font-weight-bold">{{ log.service_name if log else '' }}</span>
+                                    </td>
+                                    <td class="align-middle text-center text-sm">
+                                        <span class="text-secondary text-xs font-weight-bold">{{ log.machine_name if log else '' }}</span>
+                                    </td>
+                                    <td class="align-middle text-center text-sm">
+                                        <span class="text-secondary text-xs font-weight-bold">{{ log.ip_address if log else '' }}</span>
+                                    </td>
+                                    <td class="align-middle text-center text-sm">
+                                        <span class="text-secondary text-xs font-weight-bold">{{ log.user if log else '' }}</span>
+                                    </td>
+                                    <td class="align-middle text-center text-sm">
+                                        <span class="text-secondary text-xs font-weight-bold">{{ log.performance if log else '' }}</span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tabs = document.querySelectorAll('.nav-tabs .nav-link');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function () {
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        function addEmptyRows(numRows) {
+            var table = document.getElementById("logTable");
+            var numCols = table.rows[0].cells.length;
+
+            for (var i = 0; i < numRows; i++) {
+                var row = table.insertRow(-1);
+                for (var j = 0; j < numCols; j++) {
+                    var cell = row.insertCell(-1);
+                    cell.innerHTML = "";
+                }
+            }
+        }
+
+        // Call the function to add 5 empty rows
+        addEmptyRows(5);
+    });
+</script>
+{% endblock javascripts %}

@@ -1,0 +1,492 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Notifications {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+ <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card my-4">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+            <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+              <h6 class="text-white text-capitalize ps-3">Weapon Detection Analytics
+            </div>
+          </div>
+          <div class="card-body px-0 pb-2">
+            <div class="table-responsive p-0">
+              <table class="table align-items-center mb-0">
+                <thead>
+                <tr>
+                      <th><input type="text" class="form-control" placeholder="Search Timestamp" onkeyup="filterTable(0)"></th>
+                      <th><input type="text" class="form-control" placeholder="Search Weapon" onkeyup="filterTable(1)"></th>
+                      <th><input type="text" class="form-control" placeholder="Search Image" onkeyup="filterTable(2)"></th>
+                      <th><input type="text" class="form-control" placeholder="Search Video" onkeyup="filterTable(3)"></th>
+                      <th><input type="text" class="form-control" placeholder="Search Camera Location" onkeyup="filterTable(4)"></th>
+                      <th><input type="text" class="form-control" placeholder="Search Camera Index" onkeyup="filterTable(5)"></th>
+                      <th><input type="text" class="form-control" placeholder="Search Admin log" onkeyup="filterTable(6)"></th>
+                      <th><input type="text" class="form-control" placeholder="Search Nearest Entry" onkeyup="filterTable(7)"></th>
+                      <th><input type="text" class="form-control" placeholder="Search Nearest Exit" onkeyup="filterTable(8)"></th>
+                      <th><input type="text" class="form-control" placeholder="Search Resolved" onkeyup="filterTable(9)"></th>
+                       <th><input type="text" class="form-control" placeholder="Search Action" onkeyup="filterTable(10"></th>
+                  </tr>
+
+                  <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Alert Timestamp</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Detected Weapon</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Image</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Video</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Camera Location</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Camera Index</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Admin log</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nearest Entry</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nearest Exit</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Resolved</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm" id ="currentdate" >23/04/18, 10:24:10</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <p class="text-xs font-weight-bold mb-0">HandGun</p>
+                    </td>
+                    <td class>
+                      <span class="text-xs font-weight-bold mb-0">Image</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">Video</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> 2nd Floor</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> 4,5</span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">log details </span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">entry details</span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">exit details</span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> Yes</span>
+                    </td>  <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> Closed</span>
+                    </td>
+
+<tr>
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm" id ="currentdate" >23/04/18, 10:24:10</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <p class="text-xs font-weight-bold mb-0">HandGun</p>
+                    </td>
+                    <td class>
+                      <span class="text-xs font-weight-bold mb-0">Image</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">Video</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> 1st Floor</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> 4,5</span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">log details </span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">entry details</span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">exit details</span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> Yes</span>
+                    </td>  <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> Closed</span>
+                    </td>
+<tr>
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm" id ="currentdate" >23/04/18, 10:24:10</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <p class="text-xs font-weight-bold mb-0">HandGun</p>
+                    </td>
+                    <td class>
+                      <span class="text-xs font-weight-bold mb-0">Image</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">Video</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> 2nd Floor</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> 4,5</span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">log details </span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">entry details</span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">exit details</span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> Yes</span>
+                    </td>  <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> Closed</span>
+                    </td>
+<tr>
+                    <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm" id ="currentdate" >23/04/18, 10:24:10</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <p class="text-xs font-weight-bold mb-0">HandGun</p>
+                    </td>
+                    <td class>
+                      <span class="text-xs font-weight-bold mb-0">Image</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">Video</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> 4th Floor</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> 4,5</span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">log details </span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">entry details</span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">exit details</span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> Yes</span>
+                    </td>  <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> Closed</span>
+                    </td>
+
+                    </td>
+                  </tr>
+                   <td>
+                      <div class="d-flex px-2 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                          <h6 class="mb-0 text-sm" id ="currentdate" >23/04/18, 10:24:10</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <p class="text-xs font-weight-bold mb-0">HandGun</p>
+                    </td>
+                    <td class>
+                      <span class="text-xs font-weight-bold mb-0">Image</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">Video</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> 1st Floor</span>
+                    </td>
+                    <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> 4,5</span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">log details </span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">entry details</span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold">exit details</span>
+                    </td>
+                      <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> Yes</span>
+                    </td>  <td class="align-middle text-center">
+                      <span class="text-secondary text-xs font-weight-bold"> Closed</span>
+                    </td>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card my-4">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                        <h6 class="text-white text-capitalize ps-3">Speech and Action Analytics</h6>
+                    </div>
+                </div>
+                <div class="card-body px-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0" id="analyticsTable">
+                            <thead>
+                                <tr>
+                                    <th><input type="text" class="form-control" placeholder="Search Timestamp" onkeyup="filterTable(0)"></th>
+                                    <th><input type="text" class="form-control" placeholder="Search Input" onkeyup="filterTable(1)"></th>
+                                    <th><input type="text" class="form-control" placeholder="Search Output" onkeyup="filterTable(2)"></th>
+                                    <th><input type="text" class="form-control" placeholder="Search Classification" onkeyup="filterTable(3)"></th>
+                                    <th><input type="text" class="form-control" placeholder="Search Streak of Instances" onkeyup="filterTable(4)"></th>
+                                    <th><input type="text" class="form-control" placeholder="Search Confidence Level" onkeyup="filterTable(4)"></th>
+                                    <th><input type="text" class="form-control" placeholder="Search Device Info" onkeyup="filterTable(5)"></th>
+                                </tr>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Timestamp</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Input</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Output</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Classification</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Streak of Instances</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Confidence Level</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Device Info</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>23/04/18, 10:24:10</td>
+                                    <td>Voice</td>
+                                    <td>"How are you"</td>
+                                    <td class="text-center">Normal</td>
+                                    <td class="text-center">n/a</td>
+                                    <td class="text-center">High</td>
+                                    <td class="text-center">Microphone 2</td>
+                                </tr>
+                                <tr>
+                                    <td>23/04/18, 10:24:10</td>
+                                    <td>Action</td>
+                                    <td>Video</td>
+                                    <td class="text-center">Aggression</td>
+                                    <td class="text-center">n/a</td>
+                                    <td class="text-center">Low</td>
+                                    <td class="text-center">Camera 1</td>
+                                </tr>
+                                <tr>
+                                    <td>22/04/18, 12:21:09</td>
+                                    <td>Voice</td>
+                                    <td>"Put your hands up"</td>
+                                    <td class="text-center">Aggression</td>
+                                    <td class="text-center">3</td>
+                                    <td class="text-center">High</td>
+                                    <td class="text-center">Microphone 1</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function filterTable() {
+    let table, tr, i, j, td, txtValue;
+    table = document.getElementById("analyticsTable");
+    tr = table.getElementsByTagName("tr");
+
+    // Get all search inputs
+    let inputs = document.querySelectorAll("thead input");
+
+    // Loop through all table rows (excluding header rows)
+    for (i = 2; i < tr.length; i++) {
+        let match = true; // Assume row is visible unless a column filter fails
+
+        // Check all columns
+        for (j = 0; j < inputs.length; j++) {
+            let filter = inputs[j].value.toLowerCase();
+            td = tr[i].getElementsByTagName("td")[j];
+
+            if (td && filter) { // Only apply filter if input is not empty
+                txtValue = td.textContent || td.innerText;
+                if (!txtValue.toLowerCase().includes(filter)) {
+                    match = false; // If one column doesn't match, hide row
+                    break;
+                }
+            }
+        }
+
+        // Show or hide row based on filter match
+        tr[i].style.display = match ? "" : "none";
+    }
+}
+
+// Attach event listeners to all input fields
+document.addEventListener("DOMContentLoaded", function () {
+    let inputs = document.querySelectorAll("thead input");
+    inputs.forEach(input => {
+        input.addEventListener("keyup", filterTable);
+    });
+});
+</script>
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card my-4">
+                <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                    <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                        <h6 class="text-white text-capitalize ps-3">Crowd Analytics & Monitoring</h6>
+                    </div>
+                </div>
+                <div class="card-body px-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0" id="analyticsTable">
+                            <thead>
+                                <tr>
+                                    <th><input type="text" class="form-control" placeholder="Search Timestamp" onkeyup="filterTable(0)"></th>
+                                    <th><input type="text" class="form-control" placeholder="Search Camera Info" onkeyup="filterTable(1)"></th>
+                                    <th><input type="text" class="form-control" placeholder="Search Flow" onkeyup="filterTable(2)"></th>
+                                    <th><input type="text" class="form-control" placeholder="Search Reason" onkeyup="filterTable(3)"></th>
+                                    <th><input type="text" class="form-control" placeholder="Search Density" onkeyup="filterTable(4)"></th>
+                                    <th><input type="text" class="form-control" placeholder="Search Confidence Level" onkeyup="filterTable(5)"></th>
+                                    <th><input type="text" class="form-control" placeholder="Search Dwell Time" onkeyup="filterTable(6)"></th>
+                                    <th><input type="text" class="form-control" placeholder="Search People Count" onkeyup="filterTable(7)"></th>
+                                    <th><input type="text" class="form-control" placeholder="Search Crowd Entry Info" onkeyup="filterTable(8)"></th>
+                                    <th><input type="text" class="form-control" placeholder="Search Crowd Exit Info" onkeyup="filterTable(9)"></th>
+                                </tr>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Timestamp</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Camera info</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Flow</th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Reason</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Density People/sqft</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Confidence level</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dwell Time</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Number of People</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Crowd Entry Info</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Crowd Exit Info</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>23/04/18, 10:24:10</td>
+                                    <td>Camera in Music Room</td>
+                                    <td>"Normal"</td>
+                                    <td>"N/A"</td>
+                                    <td class="text-center">0.2 /td>
+                                    <td class="text-center">High</td>
+                                    <td class="text-center">3 minutes</td>
+                                    <td class="text-center">150</td>
+                                    <td class="text-center">120</td>
+                                    <td class="text-center">30</td>
+
+                                </tr>
+                                <tr>
+                                    <td>23/04/18, 10:24:10</td>
+                                    <td>Camera in ClassRoom1</td>
+                                    <td>Abnormal</td>
+                                    <td>Crowd is running</td>
+                                    <td class="text-center">0.5</td>
+                                    <td class="text-center">High</td>
+                                    <td class="text-center">1 minute</td>
+                                    <td class="text-center">200</td>
+                                    <td class="text-center">130</td>
+                                   <td class="text-center">70</td>
+                                </tr>
+                                <tr>
+                                    <td>23/04/18, 10:24:10</td>
+                                    <td>Camera in PlayZone</td>
+                                    <td>Abnormal</td>
+                                    <td>Carrying a Gun</td>
+                                    <td class="text-center">0.6</td>
+                                    <td class="text-center">High</td>
+                                    <td class="text-center">1 minute</td>
+                                    <td class="text-center">80</td>
+                                    <td class="text-center">50</td>
+                                   <td class="text-center">30</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function filterTable() {
+    let table, tr, i, j, td, txtValue;
+    table = document.getElementById("analyticsTable");
+    tr = table.getElementsByTagName("tr");
+
+    // Get all search inputs
+    let inputs = document.querySelectorAll("thead input");
+
+    // Loop through all table rows (excluding header rows)
+    for (i = 2; i < tr.length; i++) {
+        let match = true; // Assume row is visible unless a column filter fails
+
+        // Check all columns
+        for (j = 0; j < inputs.length; j++) {
+            let filter = inputs[j].value.toLowerCase();
+            td = tr[i].getElementsByTagName("td")[j];
+
+            if (td && filter) { // Only apply filter if input is not empty
+                txtValue = td.textContent || td.innerText;
+                if (!txtValue.toLowerCase().includes(filter)) {
+                    match = false; // If one column doesn't match, hide row
+                    break;
+                }
+            }
+        }
+
+        // Show or hide row based on filter match
+        tr[i].style.display = match ? "" : "none";
+    }
+}
+
+// Attach event listeners to all input fields
+document.addEventListener("DOMContentLoaded", function () {
+    let inputs = document.querySelectorAll("thead input");
+    inputs.forEach(input => {
+        input.addEventListener("keyup", filterTable);
+    });
+});
+</script>
+
+
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
+
+

@@ -1,0 +1,280 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Tables {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+  <div class="col-12 mt-4 mb-4">
+    <div class="card z-index-2">
+      <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+        <div class="bg-gradient-success shadow-success border-radius-lg py-3 pe-1">
+          <div class="building-layout">
+            <div class="d-flex justify-content-center">
+              <img src="/static/assets/img/BuildingImage.png" alt="Building Layout" class="img-fluid border-radius-lg" style="max-height: 400px; width: auto; max-width: 100%;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <h6 class="mb-0"> Building Layout</h6>
+        <p class="text-sm"> Update the building layout with below configuration. </p>
+        <hr class="dark horizontal">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <i class="material-icons text-sm my-auto me-1">schedule</i>
+            <p class="mb-0 text-sm"> updated 1 min ago </p>
+          </div>
+          <div>
+            <input type="file" id="blueprintUpload" style="display: none;">
+            <button class="btn bg-gradient-success btn-sm" onclick="document.getElementById('blueprintUpload').click()">
+              <i class="material-icons text-sm">upload</i> Upload Blueprint
+            </button>
+            <p class="text-sm mt-2" style="text-align: right;">Suggested file formats: .pdf, .dwg, .dxf, .png, .jpg</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // JavaScript to handle file upload (you'll need to implement the actual upload logic)
+    document.getElementById('blueprintUpload').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        // Here you would typically use AJAX or Fetch API to send the file to your server
+        console.log("File selected:", file.name);  // Placeholder - replace with your upload code
+        // Example using Fetch API (replace with your server endpoint):
+        /*
+        const formData = new FormData();
+        formData.append('blueprint', file);
+  
+        fetch('/your-upload-endpoint', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => { ... })
+        .catch(error => { ... });
+        */
+      }
+    });
+  </script>
+ <div class="row">
+  <div class="mt-4">
+    <div class="card">
+      <div class="card-header pb-0 px-3">
+        <h6 class="mb-0">Building Configuration</h6>
+      </div>
+      <div class="card-body pt-4 p-3">
+        <button class="btn bg-gradient-success btn-sm mb-3" id="addNewBuilding">Add New Building</button>
+        <ul class="list-group" id="buildingList">
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="buildingModal" tabindex="-1" aria-labelledby="buildingModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="buildingModalLabel">Edit Building</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="buildingForm">
+          <div class="mb-3">
+            <label for="buildingName" class="form-label">Building Name</label>
+            <input type="text" class="form-control" id="buildingName" required>
+          </div>
+          <div class="mb-3">
+            <label for="buildingExits" class="form-label">Total Exits</label>
+            <input type="number" class="form-control" id="buildingExits" required>
+          </div>
+          <div class="mb-3">
+            <label for="buildingCorridors" class="form-label">Total Corridors</label>
+            <input type="number" class="form-control" id="buildingCorridors" required>
+          </div>
+          <div class="mb-3">
+            <label for="buildingRooms" class="form-label">Total Rooms</label>
+            <input type="number" class="form-control" id="buildingRooms" required>
+          </div>
+          <input type="hidden" id="buildingIndex">  </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="saveBuilding">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> <script>
+    const buildingData = [
+      { name: "Main Building", exits: 7, corridors: 3, rooms: 12 },
+      { name: "Annex Building", exits: 2, corridors: 1, rooms: 5 },
+      { name: "Garage", exits: 1, corridors: 0, rooms: 2 } // Example data
+    ];
+
+  const buildingList = document.getElementById("buildingList");
+  const addNewBuildingButton = document.getElementById("addNewBuilding");
+  const buildingModal = new bootstrap.Modal(document.getElementById('buildingModal'));
+  const buildingForm = document.getElementById('buildingForm');
+  const saveBuildingButton = document.getElementById('saveBuilding');
+  let editMode = false; // Flag to track if we're editing or adding
+
+  addNewBuildingButton.addEventListener("click", () => {
+    editMode = false;
+    buildingForm.reset(); // Clear form fields
+    buildingModalLabel.textContent = "Add New Building"; // Update modal title
+    buildingModal.show();
+  });
+
+  function handleEdit(event) {
+    const index = event.target.dataset.index;
+    const building = buildingData[index];
+    editMode = true;
+    buildingIndex.value = index;
+    buildingName.value = building.name;
+    buildingExits.value = building.exits;
+    buildingCorridors.value = building.corridors;
+    buildingRooms.value = building.rooms;
+    buildingModalLabel.textContent = "Edit Building"; // Update modal title
+    buildingModal.show();
+  }
+
+  saveBuildingButton.addEventListener("click", () => {
+    if (buildingForm.checkValidity()) { // Validate form
+      const building = {
+        name: buildingName.value,
+        exits: parseInt(buildingExits.value),
+        corridors: parseInt(buildingCorridors.value),
+        rooms: parseInt(buildingRooms.value)
+      };
+
+      if (editMode) {
+        const index = buildingIndex.value;
+        buildingData[index] = building;
+      } else {
+        buildingData.push(building);
+      }
+
+      populateBuildingList();
+      saveBuildingData();
+      buildingModal.hide();
+    } else {
+        buildingForm.classList.add('was-validated');
+    }
+  });
+
+    function createBuildingItem(building, index) {
+      const listItem = document.createElement("li");
+      listItem.classList.add("list-group-item", "border-0", "d-flex", "p-4", "mb-2", "bg-gray-100", "border-radius-lg");
+      listItem.innerHTML = `
+        <div class="d-flex flex-column">
+          <h6 class="mb-3 text-sm" id="name-${index}">${building.name}</h6>
+          <span class="mb-2 text-xs">Total Number of Exits: <span class="text-dark font-weight-bold ms-sm-2" id="exits-${index}">${building.exits}</span></span>
+          <span class="mb-2 text-xs">Total Corridors: <span class="text-dark ms-sm-2 font-weight-bold" id="corridors-${index}">${building.corridors}</span></span>
+          <span class="text-xs">Total Rooms: <span class="text-dark ms-sm-2 font-weight-bold" id="rooms-${index}">${building.rooms}</span></span>
+        </div>
+        <div class="ms-auto text-end">
+        <div>
+            <input type="file" id="blueprintUpload" style="display: none;">
+            <button class="btn bg-gradient-success btn-sm" onclick="document.getElementById('blueprintUpload').click()">
+              <i class="material-icons text-sm">upload</i> Upload Blueprint
+            </button>
+            <p class="text-sm mt-2" style="text-align: right;">Suggested file formats: .pdf, .dwg, .dxf, .png, .jpg</p>
+          </div>
+          <a class="btn btn-link text-danger text-gradient px-3 mb-0 deleteBtn" href="javascript:;" data-index="${index}"><i class="material-icons text-sm me-2">delete</i>Delete</a>
+          <a class="btn btn-link text-dark px-3 mb-0 editBtn" href="javascript:;" data-index="${index}"><i class="material-icons text-sm me-2">edit</i>Edit</a>
+        </div>
+      `;
+      return listItem;
+    }
+
+
+    function populateBuildingList() {
+      buildingList.innerHTML = ""; // Clear existing items
+      buildingData.forEach((building, index) => {
+        const item = createBuildingItem(building, index);
+        buildingList.appendChild(item);
+      });
+
+      // Add event listeners *after* populating the list
+      const editButtons = document.querySelectorAll(".editBtn");
+      editButtons.forEach(button => {
+        button.addEventListener("click", handleEdit);
+      });
+
+      const deleteButtons = document.querySelectorAll(".deleteBtn");
+      deleteButtons.forEach(button => {
+        button.addEventListener("click", handleDelete);
+      });
+    }
+
+    function handleEdit(event) {
+      const index = event.target.dataset.index;
+      const nameElement = document.getElementById(`name-${index}`);
+      const exitsElement = document.getElementById(`exits-${index}`);
+      const corridorsElement = document.getElementById(`corridors-${index}`);
+      const roomsElement = document.getElementById(`rooms-${index}`);
+
+      // Example: Prompt for new name (replace with your edit logic)
+      const newName = prompt("Enter new building name:", nameElement.textContent);
+      if (newName) {
+        nameElement.textContent = newName;
+        buildingData[index].name = newName; // Update data
+      }
+      const newExits = prompt("Enter new number of exits:", exitsElement.textContent);
+        if (newExits) {
+          exitsElement.textContent = newExits;
+          buildingData[index].exits = parseInt(newExits); // Update data
+        }
+      const newCorridors = prompt("Enter new number of corridors:", corridorsElement.textContent);
+        if (newCorridors) {
+          corridorsElement.textContent = newCorridors;
+          buildingData[index].corridors = parseInt(newCorridors); // Update data
+        }
+      const newRooms = prompt("Enter new number of rooms:", roomsElement.textContent);
+        if (newRooms) {
+          roomsElement.textContent = newRooms;
+          buildingData[index].rooms = parseInt(newRooms); // Update data
+        }
+      // ... similar prompts for exits, corridors, rooms
+      saveBuildingData(); // Save to localStorage
+    }
+
+    function handleDelete(event) {
+      const index = event.target.dataset.index;
+      buildingData.splice(index, 1); // Remove from data array
+      populateBuildingList(); // Refresh the list
+      saveBuildingData(); // Save to localStorage
+    }
+
+    function saveBuildingData() {
+      localStorage.setItem('buildingData', JSON.stringify(buildingData));
+    }
+
+    function loadBuildingData() {
+      const storedData = localStorage.getItem('buildingData');
+      if (storedData) {
+        buildingData = JSON.parse(storedData);
+      }
+    }
+
+    // Load data on page load
+    loadBuildingData();
+    // Initial population of the list
+    populateBuildingList();
+
+
+  </script>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
